@@ -1,22 +1,29 @@
-# Udacity Mobile Web Specialist Course - 1st assignment
+# Udacity Mobile Web Specialist Course - 2nd assignment
 
 This is the first assignment for the Udacity Mobile Web Specialist Course
 
 ## Getting Started
 
-1. In this folder, start up a simple HTTP server to serve up the site files on your local computer. 
-Python has some simple tools to do this, and you don't even need to know Python. For most people, it's already installed on your computer. 
-In a terminal, check the version of Python you have: `python -V`. If you have Python 2.x, spin up the server with `python -m SimpleHTTPServer 8000` (or some other port, if port 8000 is already in use.) For Python 3.x, you can use 
-`python -m http.server 8000`. If you don't have Python installed, navigate to Python's [website](https://www.python.org/) to download and install the software.
-2. With your server running, visit the site: `http://localhost:8000`
+
+1. Fork and clone the server repository https://github.com/udacity/mws-restaurant-stage-2 then run "node server"
+From the command line
+2. Run "npm i"
+3. Run "gulp build"
+4. You can either use Chrome Server plugin and navigate to localhost:8000/build or run "gulp serve" and navigate to localhost:3000/build
+Please remember to switch to the "build" folder
 
 
 ## Deployment
 
 This project wants to meet the following criteria:
-- Create a responsive web design (using media queries)
-- Create an accessible site (using aria roles, alt tags and other accessibility tools)
-- Use a ServiceWorker to serve contents offline
+- The client application should pull restaurant data from the development server, parse the JSON response, and use the information to render the appropriate sections of the application UI.
+- The client application works offline. JSON responses are cached using the IndexedDB API. Any data previously accessed while connected is reachable while offline.
+- The application maintains a responsive design on mobile, tablet and desktop viewports.
+- The application retains accessibility features from the Stage 1 project. Images have alternate text, the application uses appropriate focus management for navigation, and semantic elements and ARIA attributes are used correctly.
+- Lighthouse targets for each category exceed:
+Progressive Web App: >90
+Performance: >70
+Accessibility: >90
 
 
 
@@ -24,4 +31,4 @@ This project wants to meet the following criteria:
 
 Antonio Milanese - Speech Therapist and Web Developer
 
-
+A special thanks to my mentor Mofid who almost daily supported me by giving me good references and hints

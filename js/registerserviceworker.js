@@ -1,11 +1,10 @@
-var registerServiceWorker = function() {
+//Register a service worker in build/service.js
 
-  if (!navigator.serviceWorker) return;
-  window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
-  navigator.serviceWorker.register(window.location.origin+ '/service.js').then(function(reg) {
-  }).catch(function(e) {
-    console.log('Registration failed! ' + console.log(e));
-  });
-};
-
-
+if(navigator.serviceWorker){
+    navigator.serviceWorker.register('/build/service.js', {scope: './'})
+    .then(() => {
+        console.log("Service worker has been successfully registered.");
+    }).catch((err) => {
+        console.log("error " , err);
+    });
+}

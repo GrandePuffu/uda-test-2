@@ -1,40 +1,54 @@
-"use strict";
+var idbApp = (function() {
+  'use strict';
 
-var offlineContent;
-
-// In the following line, you should include the prefixes of implementations you want to test.
-//window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-// DON'T use "var indexedDB = ..." if you're not in a function.
-// Moreover, you may need references to some window.IDB* objects:
-//window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
-//window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-// (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
-
-function openDatabase() {
-  if (!navigator.serviceWorker) {
-    return Promise.resolve();
+  if (!('indexedDB' in window)) {
+    console.log('This browser doesn\'t support IndexedDB');
+    return;
   }
 
-  var request = window.indexedDB.open("RestaurantsDatabase", 1);
+  dbPromise = idb.open('restaurants', 1, function(upgradeDb) {;
+        upgradeDb.createObjectStore('ristoranti', {keyPath: 'id'});
+		addProducts();
+  });
 
-  request.onupgradeneeded = function (event) {
-    // Save the IDBDatabase interface
-    var db = event.target.result;
-    // Create an objectStore for this database
-    var objectStore = db.createObjectStore("ristoranti", { autoIncrement: true });
-    fetch("http://localhost:1337/restaurants", {}).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      objectStore.transaction.oncomplete = function (event) {
-        var customerObjectStore = db.transaction("ristoranti", "readwrite").objectStore("ristoranti");
-        data.forEach(function (ristorante) {
-          var request = customerObjectStore.add(ristorante);
-          request.onsuccess = function (event) {
-            // event.target.result === ristorante.ssn;
+  function addProducts() {
+	DBHelper.fetchRestaurants((error,rest) => {
+    dbPromise.then(function(db) {
+      var tx = db.transaction('ristoranti', 'readwrite');
 
-          };
-        });
-      };
+      var store = tx.objectStore('ristoranti');
+	  var ristoranti;
+
+	      return Promise.all(rest.map(function(dati) {
+          console.log('Adding item: ', dati);
+          return store.add(dati);
+        }))
+		
+	  });
+
+	});
+  }
+
+
+  function getRestaurants() {
+    return dbPromise.then(function(db) {
+      var tx = db.transaction('ristoranti', 'readonly');
+      var store = tx.objectStore('ristoranti');
+      return store.getAll();
     });
+  }
+
+
+
+
+
+
+
+
+  return {
+    dbPromise: (dbPromise),
+    addProducts: (addProducts),
+    getRestaurants: (getRestaurants),
+
   };
-}
+})();
